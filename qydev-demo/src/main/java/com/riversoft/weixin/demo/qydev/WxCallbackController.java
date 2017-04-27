@@ -2,10 +2,17 @@ package com.riversoft.weixin.demo.qydev;
 
 import com.riversoft.weixin.common.decrypt.MessageDecryption;
 import com.riversoft.weixin.common.exception.WxRuntimeException;
+import com.riversoft.weixin.common.jsapi.JsAPISignature;
 import com.riversoft.weixin.common.message.XmlMessageHeader;
+import com.riversoft.weixin.common.util.JsonMapper;
 import com.riversoft.weixin.demo.commons.DuplicatedMessageChecker;
 import com.riversoft.weixin.qy.base.CorpSetting;
+import com.riversoft.weixin.qy.contact.Users;
+import com.riversoft.weixin.qy.contact.user.ReadUser;
+import com.riversoft.weixin.qy.jsapi.JsAPIs;
 import com.riversoft.weixin.qy.message.QyXmlMessages;
+import com.riversoft.weixin.qy.oauth2.QyOAuth2s;
+import com.riversoft.weixin.qy.oauth2.bean.QyUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +39,35 @@ public class WxCallbackController {
     @Value("${agent.default.aesKey}")
     private String aesKey;
 
-    @Autowired
-    private DuplicatedMessageChecker duplicatedMessageChecker;
+    @Value("${url}")
+    private String url;
 
-    public void setDuplicatedMessageChecker(DuplicatedMessageChecker duplicatedMessageChecker) {
-        this.duplicatedMessageChecker = duplicatedMessageChecker;
+    @RequestMapping("/index")
+    @ResponseBody
+    public String index(String agentid,String code,String state){
+        QyUser qyUser = QyOAuth2s.defaultOAuth2s().userInfo(code);
+        ReadUser readUser = Users.defaultUsers().get(qyUser.getUserId());
+        String createJson = JsonMapper.nonEmptyMapper().toJson(readUser);
+        return createJson;
+    }
+
+
+    @RequestMapping("/auth")
+    @ResponseBody
+    public String auth(){
+        JsAPISignature jsAPISignature = JsAPIs.defaultJsAPIs().createJsAPISignature(url);
+        String createJson = JsonMapper.nonEmptyMapper().toJson(jsAPISignature);
+        return createJson;
+    }
+
+    @RequestMapping("/groupauth")
+    @ResponseBody
+    public String groupauth(){
+        JsAPISignature jsAPISignature = JsAPIs.defaultJsAPIs().createJsAPISignature(url);
+        String createJson = JsonMapper.nonEmptyMapper().toJson(jsAPISignature);
+        JsAPISignature gjsAPISignature = JsAPIs.defaultJsAPIs().createJsAPIGroupSignature(url);
+        String createGroupJson = JsonMapper.nonEmptyMapper().toJson(gjsAPISignature);
+        return createJson+"|"+createGroupJson;
     }
 
     /**
