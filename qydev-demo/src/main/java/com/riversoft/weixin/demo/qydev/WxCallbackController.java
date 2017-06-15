@@ -3,6 +3,9 @@ package com.riversoft.weixin.demo.qydev;
 import com.riversoft.weixin.common.decrypt.MessageDecryption;
 import com.riversoft.weixin.common.exception.WxRuntimeException;
 import com.riversoft.weixin.common.jsapi.JsAPISignature;
+import com.riversoft.weixin.common.message.Article;
+import com.riversoft.weixin.common.message.News;
+import com.riversoft.weixin.common.message.Text;
 import com.riversoft.weixin.common.message.XmlMessageHeader;
 import com.riversoft.weixin.common.util.JsonMapper;
 import com.riversoft.weixin.demo.commons.DuplicatedMessageChecker;
@@ -10,7 +13,11 @@ import com.riversoft.weixin.qy.base.CorpSetting;
 import com.riversoft.weixin.qy.contact.Users;
 import com.riversoft.weixin.qy.contact.user.ReadUser;
 import com.riversoft.weixin.qy.jsapi.JsAPIs;
+import com.riversoft.weixin.qy.message.Messages;
 import com.riversoft.weixin.qy.message.QyXmlMessages;
+import com.riversoft.weixin.qy.message.json.JsonMessage;
+import com.riversoft.weixin.qy.message.json.NewsMessage;
+import com.riversoft.weixin.qy.message.json.TextMessage;
 import com.riversoft.weixin.qy.oauth2.QyOAuth2s;
 import com.riversoft.weixin.qy.oauth2.bean.QyUser;
 import org.slf4j.Logger;
@@ -68,6 +75,14 @@ public class WxCallbackController {
         JsAPISignature gjsAPISignature = JsAPIs.defaultJsAPIs().createJsAPIGroupSignature(url);
         String createGroupJson = JsonMapper.nonEmptyMapper().toJson(gjsAPISignature);
         return createJson+"|"+createGroupJson;
+    }
+
+    @RequestMapping(value = "/sendmsg", method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String sendmsg(@RequestParam String message,@RequestParam String touser){
+        JsonMessage textMessage = new TextMessage().text(message).toUser(touser);
+        Messages.defaultMessages().send(textMessage);
+        return "success";
     }
 
     /**
