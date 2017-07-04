@@ -6,7 +6,6 @@ import com.riversoft.weixin.common.decrypt.SHA1;
 import com.riversoft.weixin.common.event.EventRequest;
 import com.riversoft.weixin.common.exception.WxRuntimeException;
 import com.riversoft.weixin.common.message.XmlMessageHeader;
-import com.riversoft.weixin.demo.commons.DuplicatedMessageChecker;
 import com.riversoft.weixin.mp.base.AppSetting;
 import com.riversoft.weixin.mp.care.CareMessages;
 import com.riversoft.weixin.mp.message.MpXmlMessages;
@@ -47,7 +46,7 @@ public class WxCallbackController {
      * @param content
      * @return
      */
-    @RequestMapping("/wx/mp")
+    @RequestMapping("/mp")
     @ResponseBody
     public String mp(@RequestParam(value="signature") String signature,
                      @RequestParam(value="msg_signature", required = false) String msg_signature,
@@ -107,15 +106,15 @@ public class WxCallbackController {
     private XmlMessageHeader mpDispatch(XmlMessageHeader xmlRequest) {
         if(!duplicatedMessageChecker.isDuplicated(xmlRequest.getFromUser() + xmlRequest.getCreateTime().getTime())) {
             String welcome = "您好:" + Users.defaultUsers().get(xmlRequest.getFromUser()).getNickName();
-            CareMessages.defaultCareMessages().text(xmlRequest.getFromUser(), welcome);
+            /*CareMessages.defaultCareMessages().text(xmlRequest.getFromUser(), welcome);*/
 
             if (xmlRequest instanceof EventRequest) {
                 EventRequest eventRequest = (EventRequest) xmlRequest;
                 logger.debug("事件请求[{}]", eventRequest.getEventType().name());
-                CareMessages.defaultCareMessages().text(xmlRequest.getFromUser(), "事件请求:" + eventRequest.getEventType().name());
+                /*CareMessages.defaultCareMessages().text(xmlRequest.getFromUser(), "事件请求:" + eventRequest.getEventType().name());*/
             } else {
                 logger.debug("消息请求[{}]", xmlRequest.getMsgType().name());
-                CareMessages.defaultCareMessages().text(xmlRequest.getFromUser(), "消息请求:" + xmlRequest.getMsgType().name());
+                /*CareMessages.defaultCareMessages().text(xmlRequest.getFromUser(), "消息请求:" + xmlRequest.getMsgType().name());*/
             }
         } else {
             logger.warn("Duplicated message: {} @ {}", xmlRequest.getMsgType(), xmlRequest.getFromUser());
