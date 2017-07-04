@@ -3,6 +3,7 @@ package com.riversoft.weixin.demo.qydev;
 import com.riversoft.weixin.common.decrypt.MessageDecryption;
 import com.riversoft.weixin.common.exception.WxRuntimeException;
 import com.riversoft.weixin.common.jsapi.JsAPISignature;
+import com.riversoft.weixin.common.media.Media;
 import com.riversoft.weixin.common.message.Article;
 import com.riversoft.weixin.common.message.News;
 import com.riversoft.weixin.common.message.Text;
@@ -13,6 +14,7 @@ import com.riversoft.weixin.qy.base.CorpSetting;
 import com.riversoft.weixin.qy.contact.Users;
 import com.riversoft.weixin.qy.contact.user.ReadUser;
 import com.riversoft.weixin.qy.jsapi.JsAPIs;
+import com.riversoft.weixin.qy.media.Medias;
 import com.riversoft.weixin.qy.message.Messages;
 import com.riversoft.weixin.qy.message.QyXmlMessages;
 import com.riversoft.weixin.qy.message.json.JsonMessage;
@@ -20,13 +22,20 @@ import com.riversoft.weixin.qy.message.json.NewsMessage;
 import com.riversoft.weixin.qy.message.json.TextMessage;
 import com.riversoft.weixin.qy.oauth2.QyOAuth2s;
 import com.riversoft.weixin.qy.oauth2.bean.QyUser;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.*;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by exizhai on 10/7/2015.
@@ -48,6 +57,9 @@ public class WxCallbackController {
 
     @Value("${url}")
     private String url;
+
+    @Value("${upload.leave.image}")
+    private String folder;
 
     @RequestMapping("/index")
     @ResponseBody
@@ -83,6 +95,35 @@ public class WxCallbackController {
         JsonMessage textMessage = new TextMessage().text(message).toUser(touser);
         Messages.defaultMessages().send(textMessage);
         return "success";
+    }
+
+    @RequestMapping(value = "/downloadimg",produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String downloadimg(@RequestParam String mediaid ) {
+        try {
+            File file = Medias.defaultMedias().download(mediaid);
+            String webappPath = this.getClass().getClassLoader().getResource("../../").getPath();
+            String name = file.getName();
+            String path = webappPath+folder+name;
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+
+            File newFile = new File(path);
+            if (!newFile.exists()) {
+                newFile.createNewFile();
+            }
+            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newFile));
+            int i;
+            while((i=in.read())!=-1){
+                out.write(i);
+            }
+            out.flush();
+            out.close();
+            in.close();
+            return folder+name;
+        }catch (Exception e){
+            return "";
+        }
+
     }
 
     /**
