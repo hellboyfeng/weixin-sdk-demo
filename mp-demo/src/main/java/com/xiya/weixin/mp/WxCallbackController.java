@@ -1,18 +1,21 @@
-package com.riversoft.weixin.demo.mp;
+package com.xiya.weixin.mp;
 
 import com.riversoft.weixin.common.decrypt.AesException;
 import com.riversoft.weixin.common.decrypt.MessageDecryption;
 import com.riversoft.weixin.common.decrypt.SHA1;
 import com.riversoft.weixin.common.event.EventRequest;
 import com.riversoft.weixin.common.exception.WxRuntimeException;
+import com.riversoft.weixin.common.jsapi.JsAPISignature;
 import com.riversoft.weixin.common.message.XmlMessageHeader;
+import com.riversoft.weixin.common.util.JsonMapper;
 import com.riversoft.weixin.mp.base.AppSetting;
-import com.riversoft.weixin.mp.care.CareMessages;
+import com.riversoft.weixin.mp.jsapi.JsAPIs;
 import com.riversoft.weixin.mp.message.MpXmlMessages;
 import com.riversoft.weixin.mp.user.Users;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,11 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class WxCallbackController {
 
+
+    @Value("${url}")
+    private String url;
+
+
     private static Logger logger = LoggerFactory.getLogger(WxCallbackController.class);
 
     @Autowired
@@ -31,6 +39,20 @@ public class WxCallbackController {
     public void setDuplicatedMessageChecker(DuplicatedMessageChecker duplicatedMessageChecker) {
         this.duplicatedMessageChecker = duplicatedMessageChecker;
     }
+
+
+    /**
+     * 公众号OAuth回调接口
+     * @return
+     */
+    @RequestMapping("/config")
+    @ResponseBody
+    public String config() {
+        JsAPISignature jsAPISignature = JsAPIs.defaultJsAPIs().createJsAPISignature(url);
+        String createJson = JsonMapper.nonEmptyMapper().toJson(jsAPISignature);
+        return createJson;
+    }
+
 
     /**
      * 公众号回调接口

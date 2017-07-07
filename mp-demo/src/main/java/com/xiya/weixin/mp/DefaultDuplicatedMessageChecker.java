@@ -1,4 +1,4 @@
-package com.riversoft.weixin.demo.mp;
+package com.xiya.weixin.mp;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

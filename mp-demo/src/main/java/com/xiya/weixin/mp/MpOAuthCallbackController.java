@@ -1,8 +1,8 @@
-package com.riversoft.weixin.demo.mp;
+package com.xiya.weixin.mp;
 
 import com.riversoft.weixin.common.oauth2.AccessToken;
 import com.riversoft.weixin.common.oauth2.OpenUser;
-import com.riversoft.weixin.demo.mp.util.JsonMapper;
+import com.xiya.weixin.mp.util.JsonMapper;
 import com.riversoft.weixin.mp.oauth2.MpOAuth2s;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

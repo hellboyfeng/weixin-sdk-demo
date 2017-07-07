@@ -1,4 +1,4 @@
-package com.riversoft.weixin.demo.mp;
+package com.xiya.weixin.mp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

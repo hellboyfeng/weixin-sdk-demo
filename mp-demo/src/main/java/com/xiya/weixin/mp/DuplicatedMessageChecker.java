@@ -1,4 +1,4 @@
-package com.riversoft.weixin.demo.mp;
+package com.xiya.weixin.mp;
 
 /**
  * Created by exizhai on 11/15/2015.
