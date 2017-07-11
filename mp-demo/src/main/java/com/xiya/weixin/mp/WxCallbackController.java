@@ -20,16 +20,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by exizhai on 10/7/2015.
  */
 @Controller
 public class WxCallbackController {
-
-
-    @Value("${url}")
-    private String url;
-
 
     private static Logger logger = LoggerFactory.getLogger(WxCallbackController.class);
 
@@ -47,7 +44,10 @@ public class WxCallbackController {
      */
     @RequestMapping("/config")
     @ResponseBody
-    public String config() {
+    public String config(HttpServletRequest request,@RequestParam(value="url") String url) {
+        if(url.contains("#")){
+            url = url.substring(0,url.indexOf("#"));
+        }
         JsAPISignature jsAPISignature = JsAPIs.defaultJsAPIs().createJsAPISignature(url);
         String createJson = JsonMapper.nonEmptyMapper().toJson(jsAPISignature);
         return createJson;
