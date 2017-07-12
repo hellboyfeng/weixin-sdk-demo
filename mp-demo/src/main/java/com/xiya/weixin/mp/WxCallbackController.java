@@ -110,6 +110,7 @@ public class WxCallbackController {
                     }
                 }
             } catch (AesException e) {
+                logger.error(e.getMessage());
             }
         } else {
             xmlRequest = MpXmlMessages.fromXml(content);
