@@ -39,6 +39,8 @@ public class MemberController {
         member.setBackgroundPic("https://mmbiz.qlogo.cn/mmbiz_jpg/ON84cr4Rib6MX8UugBP9uRmRxOkYqBVMACickSzpNRqYSZia0Y5Danqk3PvmHzeWcxYztTNR5KGKCyGkMuTDmlKEw/0?wx_fmt=jpeg");
      /*   member.setAutoActivate(true);*/
         member.setWxActivate(true);
+        member.setWxActivateAfterSubmit(true);
+        member.setWxActivateAfterSubmitUrl("http://wx.xiya3333.com/xiya/member/bindview");
         member.setSupplyBonus(true);
         member.setBonusUrl("http://www.xiya3333.com");
         member.setSupplyBalance(true);
@@ -52,7 +54,7 @@ public class MemberController {
         baseInfo.setLogoUrl("http://mmbiz.qpic.cn/mmbiz_jpg/ON84cr4Rib6M7kPADl39MIwc4OOJmWHnvfSkTu4NtKKkCjd7AwgwS2G8nsLKibZzHLQESBJaeGt7tAMN3gYxYyrw/0?wx_fmt=jpeg");
         baseInfo.setCodeType("CODE_TYPE_BARCODE");
         baseInfo.setBrandName("西亚和美商业股份有限公司");
-        baseInfo.setTitle("美食卡");
+        baseInfo.setTitle("美食卡333");
         baseInfo.setColor("Color100");
         baseInfo.setNotice("卡券使用提醒");
         baseInfo.setDescription("卡券使用说明");
@@ -94,7 +96,7 @@ public class MemberController {
                 "\"action_info\": {" +
                 "\"card\": {" +
                 "\"card_id\": \"%s\"," +
-                "\"outer_str\":\"门店/柜组号/自定义\""+
+                "\"outer_str\":\"{depart:000210003,code:1003:organ_code:0000}\""+
                 "  }" +
                 " }" +
                 "}";

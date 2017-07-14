@@ -9,6 +9,7 @@ import com.riversoft.weixin.common.jsapi.JsAPISignature;
 import com.riversoft.weixin.common.message.XmlMessageHeader;
 import com.riversoft.weixin.common.util.JsonMapper;
 import com.riversoft.weixin.mp.base.AppSetting;
+import com.riversoft.weixin.mp.care.CareMessages;
 import com.riversoft.weixin.mp.jsapi.JsAPIs;
 import com.riversoft.weixin.mp.message.MpXmlMessages;
 import com.riversoft.weixin.mp.user.Users;
@@ -129,15 +130,15 @@ public class WxCallbackController {
     private XmlMessageHeader mpDispatch(XmlMessageHeader xmlRequest) {
         if(!duplicatedMessageChecker.isDuplicated(xmlRequest.getFromUser() + xmlRequest.getCreateTime().getTime())) {
             String welcome = "您好:" + Users.defaultUsers().get(xmlRequest.getFromUser()).getNickName();
-            /*CareMessages.defaultCareMessages().text(xmlRequest.getFromUser(), welcome);*/
+            CareMessages.defaultCareMessages().text(xmlRequest.getFromUser(), welcome);
 
             if (xmlRequest instanceof EventRequest) {
                 EventRequest eventRequest = (EventRequest) xmlRequest;
                 logger.debug("事件请求[{}]", eventRequest.getEventType().name());
-                /*CareMessages.defaultCareMessages().text(xmlRequest.getFromUser(), "事件请求:" + eventRequest.getEventType().name());*/
+                CareMessages.defaultCareMessages().text(xmlRequest.getFromUser(), "事件请求:" + eventRequest.getEventType().name());
             } else {
                 logger.debug("消息请求[{}]", xmlRequest.getMsgType().name());
-                /*CareMessages.defaultCareMessages().text(xmlRequest.getFromUser(), "消息请求:" + xmlRequest.getMsgType().name());*/
+                CareMessages.defaultCareMessages().text(xmlRequest.getFromUser(), "消息请求:" + xmlRequest.getMsgType().name());
             }
         } else {
             logger.warn("Duplicated message: {} @ {}", xmlRequest.getMsgType(), xmlRequest.getFromUser());
